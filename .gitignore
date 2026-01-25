@@ -1,0 +1,29 @@
+
+# Ignore everything by default
+*
+# Allow Git to see the diapos directory and subdirectories
+# 1. Allow Git to look into the diapos directory
+!diapos/
+
+# 2. Ignore everything inside diapos by default 
+# (This prevents tracking the subdirectories themselves as "all-inclusive" blocks)
+diapos/*
+
+# 3. Allow Git to look into every subdirectory of diapos
+!diapos/*/
+
+# 4. Specifically un-ignore ONLY the PDF files starting with 'lng' inside those subdirectories
+!diapos/**/lng*.pdf 
+
+!scripts/
+!scripts/**
+!donnees/
+!donnees/**
+!extras/
+!extras/**
+# Always include specific files
+!README.md
+!.gitignore
+# Ignore system and temporary files
+.DS_Store
+.Rproj.user
