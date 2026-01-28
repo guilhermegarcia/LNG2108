@@ -1,3 +1,0 @@
-# Diapos
-
-Consultez Brio.

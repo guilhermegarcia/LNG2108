@@ -12,7 +12,6 @@ Concepts-clés utilisés en linguistique de corpus comme la représentativité, 
 
 Dans ce dépôt, vous trouverez les dossiers suivants pendant le cours :
 
-- `diapos` : les PDFs du cours
 - `donnees` : les données utilisées dans nos analyses de corpus
 - `exercices` : les exercices de révision
 - `extras` : des fichiers utiles
