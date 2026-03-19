@@ -19,6 +19,8 @@ diapos/*
 !scripts/**
 !donnees/
 !donnees/**
+!exposes/
+!exposes/**
 !extras/
 !extras/**
 # Always include specific files
