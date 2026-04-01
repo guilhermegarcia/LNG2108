@@ -1,0 +1,115 @@
+---
+title: "Projet final"
+format: revealjs
+author: "Vos noms"
+date: today
+bibliography: refs.bib
+engine: knitr
+---
+
+## Première diapo
+
+- Voilà! Voici notre *texte* en **gras**
+- Avantage principal : on combine le code et le contenu
+- On peut aussi citer des œuvres : @tidyverse
+
+## Un exemple de code simple
+
+- Voici `r sqrt(81)`!
+- Un autre calcul : $7^2 =$ `r 7^2`
+
+## Les blocs de code
+
+```{r}
+# C'est comme un script
+library(tidyverse)
+library(tidytext)
+library(stopwords)
+library(knitr)
+
+# Vérifier le chemin pour le fichier!
+load("../donnees/proust.RData")
+pr_df <- tibble(texte = proust) |>
+  mutate(
+    pt_header = str_detect(texte, "^(PREMIÈRE|DEUXIÈME|TROISIÈME)"),
+    partie = cumsum(pt_header)
+  ) |>
+  filter(!pt_header, str_length(texte) > 0) |> # enlever les pt_header FALSE + les lignes vides
+  mutate(texte = str_replace_all(texte, "’|'", " "))
+
+pr_df |> 
+  sample_n(size = 5) |> 
+  kable()
+
+tokens <- pr_df |>
+  unnest_tokens(mot, texte) |>
+  select(-pt_header)
+
+# A: Statistique de base
+n_tokens <- nrow(tokens)
+n_types <- tokens |> # Option 1
+  summarize(types = n_distinct(mot)) |>
+  pull(types)
+
+```
+
+## Extraire des variables des codes
+
+- On a `r n_types` types et `r n_tokens` tokens dans le texte
+- Les figures sont aussi très utiles dans une présentation
+
+```{r}
+#| fig-align: center
+#| out-width: 90%
+#| fig-dpi: 500
+pr_df <- pr_df |>
+  mutate(
+    partie = as_factor(partie),
+    pt_chap = str_detect(texte, "^[IVXLCD]+\\.{1}$"),
+    chapitre = cumsum(pt_chap),
+    .by = partie
+  )
+
+tokens <- tokens |>
+  mutate(
+    sous_partie = ntile(row_number(), 10) |> as_factor(),
+    .by = partie
+  )
+
+sw <- stopwords("fr", source = "stopwords-iso")
+
+entropie <- function(freq) {
+  p <- freq / sum(freq)
+  p <- p[p > 0]
+  -sum(p * log2(p))
+}
+
+entropies <- tokens |>
+  filter(!mot %in% sw) |>
+  count(partie, sous_partie, mot) |>
+  summarize(
+    H = entropie(n),
+    .by = c(partie, sous_partie)
+  ) |>
+  mutate(
+    partie = as_factor(partie)
+  )
+
+ggplot(data = entropies, aes(x = sous_partie, y = H, color = partie)) + 
+  geom_point() +
+  geom_line(aes(group = partie)) +
+  labs(x = "Sous partie", y = "Entropie (H)", color = "Partie :", title = "Entropie à travers les parties") +
+  theme_classic(base_size = 25) + 
+  theme(legend.position = "bottom")
+
+```
+
+
+## Symboles
+
+- Vous n'avez pas besoin de PPT 😌
+
+## Références
+
+
+

@@ -23,6 +23,8 @@ diapos/*
 !exposes/**
 !extras/
 !extras/**
+!quarto/
+!quarto/**
 # Always include specific files
 !README.md
 !.gitignore
